@@ -62,7 +62,8 @@ SOCKS5ServerState_readRequest = SOCKS5ClientRequest:request -> receiver.clientRe
 
 SOCKS5ClientState_initial = SOCKS5ServerAuthSelection:selection -> receiver.authSelected(selection)
 SOCKS5ClientState_readLoginResponse = SOCKS5ServerLoginResponse:response -> receiver.loginResponse(response)
-SOCKS5ClientState_readResponse = SOCKS5ServerResponse:response -> receiver.serverResponse(*response)
+SOCKS5ClientState_readResponse = ( SOCKS5ServerResponse:response -> receiver.serverResponse(*response) )
+                                    | ( '\x00' anything* -> receiver.serverResponse(1, None, None)
 
 
 SOCKSState_readData = anything:data -> receiver.dataReceived(data)
