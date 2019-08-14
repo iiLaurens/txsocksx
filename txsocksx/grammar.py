@@ -60,10 +60,11 @@ SOCKS5ClientRequest = '\x05' SOCKS5Command:command '\x00' SOCKS5Address:address 
 SOCKS5ServerState_initial = SOCKS5ClientGreeting:authMethods -> receiver.authRequested(authMethods)
 SOCKS5ServerState_readRequest = SOCKS5ClientRequest:request -> receiver.clientRequest(*request)
 
-SOCKS5ClientState_initial = SOCKS5ServerAuthSelection:selection -> receiver.authSelected(selection)
+SOCKS5ClientState_initial = ( SOCKS5ServerAuthSelection:selection -> receiver.authSelected(selection) )
+                            | (~'\x05' anything* -> receiver.authSelected('\xff') )
 SOCKS5ClientState_readLoginResponse = SOCKS5ServerLoginResponse:response -> receiver.loginResponse(response)
 SOCKS5ClientState_readResponse = ( SOCKS5ServerResponse:response -> receiver.serverResponse(*response) )
-                                    | ( '\x00' anything* -> receiver.serverResponse(1, None, None) )
+                                 | ( ~'\x05' anything* -> receiver.serverResponse(1, None, None) )
 
 
 SOCKSState_readData = anything:data -> receiver.dataReceived(data)
