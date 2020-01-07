@@ -8,26 +8,17 @@ env:
   matrix:
     # earliest and latest supported; last release of every year; 12.1 and 15.0
     # for txsocksx.http
-    - TWISTED=Twisted==10.1
-    - TWISTED=Twisted==10.2
-    - TWISTED=Twisted==11.1
-    - TWISTED=Twisted==12.1
-    - TWISTED=Twisted==12.3
-    - TWISTED=Twisted==13.2
-    - TWISTED=Twisted==14.0
-    - TWISTED=Twisted==15.0
-    - TWISTED=Twisted==15.2
-    - TWISTED=svn+svn://svn.twistedmatrix.com/svn/Twisted/trunk
-
+    - TWISTED=Twisted==10.1.0
+    - TWISTED=Twisted==17.9.0
+    - TWISTED=Twisted
+    
 python:
-  - 2.6
   - 2.7
-  - pypy
-
-matrix:
-  allow_failures:
-    # pypy is a bit sporadic
-    - python: pypy
+  - 3.4
+  - 3.5
+  - 3.6
+  - 3.7
+  - 3.8
 
 cache:
   directories:
@@ -35,8 +26,9 @@ cache:
 
 install:
   - pip install -U pip
-  - pip install $TWISTED pyOpenSSL coveralls
-  - pip install -r requirements.txt
+  - pip install $TWISTED 
+  - pip install .
+  - pip install pyOpenSSL coveralls
 
 script: coverage run $(which trial) txsocksx
 after_success: "coveralls"
